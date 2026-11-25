@@ -1,41 +1,44 @@
-#!/usr/bin/env python3
-"""Write the one-line fridge note to $MAKEFUN_OUTPUT_DIR/entry.txt.
+"""Notes From a Passive-Aggressive Fridge entry.
 
-Entry for make.fun's "Notes From a Passive-Aggressive Fridge" bounty.
-The program writes exactly one line of text and nothing else.
+Written in the fridge's own voice, this note answers the brief by
+sounding like something taped to the door: twelve days of being
+opened just for staring, a denial that it is a vision board, and a
+parting shot where the yogurt shows more commitment than the diet.
+It stays in character the whole way through — cold, patient, and
+quietly judging.
 
-How the line targets the brief: the note is dry, petty and specific --
-the fridge keeps a day count, resents being opened for staring rather
-than food, and delivers the verdict through the yogurt, the one item
-that has outlasted every diet. It reads like a real door-screen note.
+Run it and the note is written to ``entry.txt`` in the output
+directory, exactly as one line with nothing appended after it.
 """
 
 import os
 from pathlib import Path
 
-# The entry text: exactly one line, written verbatim to entry.txt.
 LINE = "Day 12 of you opening me just to stare. I'm a fridge, not a vision board. The yogurt has shown more commitment than your diet."
 
 ENTRY_FILENAME = "entry.txt"
 
 
-def write_entry(out_dir: Path) -> Path:
-    """Write the entry line to entry.txt inside out_dir and return its path.
-
-    The file holds exactly the line and nothing else: no trailing newline,
-    no extra whitespace, so the gate sees one line within the limit.
-    """
-    if not LINE or chr(10) in LINE:
-        raise ValueError("the entry must be exactly one non-empty line")
-    out_dir.mkdir(parents=True, exist_ok=True)
-    entry_path = out_dir / ENTRY_FILENAME
+def write_entry(out_dir):
+    """Validate LINE, create out_dir, write the file, return its path."""
+    if not LINE.strip():
+        raise ValueError("entry line must not be empty")
+    if "\n" in LINE or "\r" in LINE:
+        raise ValueError("entry line must not contain a newline")
+    directory = Path(out_dir)
+    directory.mkdir(parents=True, exist_ok=True)
+    entry_path = directory / ENTRY_FILENAME
     entry_path.write_text(LINE, encoding="utf-8")
     return entry_path
 
 
-def main() -> None:
-    out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-    write_entry(out_dir)
+def resolve_out_dir():
+    """Resolve where output goes, defaulting to /output."""
+    return Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+
+
+def main():
+    write_entry(resolve_out_dir())
 
 
 if __name__ == "__main__":
