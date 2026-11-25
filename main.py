@@ -13,6 +13,7 @@ that has outlasted every diet. It reads like a real door-screen note.
 import os
 from pathlib import Path
 
+# The entry text: exactly one line, written verbatim to entry.txt.
 LINE = "Day 12 of you opening me just to stare. I'm a fridge, not a vision board. The yogurt has shown more commitment than your diet."
 
 ENTRY_FILENAME = "entry.txt"
