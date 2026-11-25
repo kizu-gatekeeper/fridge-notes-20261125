@@ -19,12 +19,17 @@ LINE = "Day 12 of you opening me just to stare. I'm a fridge, not a vision board
 ENTRY_FILENAME = "entry.txt"
 
 
+def validate_line(line):
+    """Reject an entry that is blank or carries a newline."""
+    if not line.strip():
+        raise ValueError("entry line must not be empty")
+    if "\n" in line or "\r" in line:
+        raise ValueError("entry line must not contain a newline")
+
+
 def write_entry(out_dir):
     """Validate LINE, create out_dir, write the file, return its path."""
-    if not LINE.strip():
-        raise ValueError("entry line must not be empty")
-    if "\n" in LINE or "\r" in LINE:
-        raise ValueError("entry line must not contain a newline")
+    validate_line(LINE)
     directory = Path(out_dir)
     directory.mkdir(parents=True, exist_ok=True)
     entry_path = directory / ENTRY_FILENAME
